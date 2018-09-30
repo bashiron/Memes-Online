@@ -14,7 +14,7 @@ class Provider {
 	File	papelera
 	
 	/**
-	 * Contructor que se ubica en la carpeta de memes default.
+	 * Contructor que se ubica en la carpeta de memes default y usa la papelera default.
 	 */
 	new() {
 		this.memes = new File("C:\\Users\\user\\Downloads\\Luchi\\Memes")
@@ -244,19 +244,7 @@ class Provider {
 		dameMeme(nombre) != "<NO HAY MEME>"
 	}
 	
-//	------------- OTROS -------------
-	
-	/**
-	 * Prop: sustituye la carpeta padre por la carpeta ubicada en el path recibido.
-	 */
-	def cambiarCarpetaPadre(String path) {
-		val nueva = new File(path)
-		if (nueva.isFile) {
-			throw new NotFolderException
-		} else {
-			memes = nueva
-		}
-	}
+//	------------- LIMPIEZA -------------
 	
 	/**
 	 * Prop: limpia de carpetas y memes el directorio principal.
@@ -289,15 +277,6 @@ class Provider {
 	}
 	
 	/**
-	 * Prop: cambia de directorio el archivo recibido hacia el path indicado.
-	 * @param	archivo	el archivo a mover.
-	 * @param	destino	el path del destino.
-	 */
-	def mover(File archivo, String destino) {
-		Files.move(Paths.get(archivo.path), Paths.get(destino+"\\"+archivo.name), StandardCopyOption.REPLACE_EXISTING)
-	}
-	
-	/**
 	 * CUIDADO - Una vez borrados los elementos de la papelera ya no se pueden recuperar.<p>
 	 * Prop: limpia de carpetas y memes la papelera, haciendo recursion sobre sus carpetas.
 	 */
@@ -325,6 +304,29 @@ class Provider {
 			}
 		}
 		carpeta.delete
+	}
+	
+//	------------- OTROS -------------
+
+	/**
+	 * Prop: sustituye la carpeta padre por la carpeta ubicada en el path recibido.
+	 */
+	def cambiarCarpetaPadre(String path) {
+		val nueva = new File(path)
+		if (nueva.isFile) {
+			throw new NotFolderException
+		} else {
+			memes = nueva
+		}
+	}
+
+	/**
+	 * Prop: cambia de directorio el archivo recibido hacia el path indicado.
+	 * @param	archivo	el archivo a mover.
+	 * @param	destino	el path del destino.
+	 */
+	def mover(File archivo, String destino) {
+		Files.move(Paths.get(archivo.path), Paths.get(destino+"\\"+archivo.name), StandardCopyOption.REPLACE_EXISTING)
 	}
 	
 }
