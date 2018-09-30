@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>memes_online</groupId>
+  <artifactId>memes_online_rest</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Memes Online REST</name>
+  <description>API REST para solicitar memes de la computadora y operar sobre el sistema de archivos remotamente</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.uqbar</groupId>
+  		<artifactId>xtrest</artifactId>
+  		<version>1.0.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>memes_online</groupId>
+  		<artifactId>memes_online</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
+</project>
