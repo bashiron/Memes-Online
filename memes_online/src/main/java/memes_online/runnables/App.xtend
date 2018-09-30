@@ -6,6 +6,6 @@ class App {
 	
 	def static void main(String[] args) {
 		val provider = new Provider
-		provider.crearArchivo("bashiron.jpg")
+		provider.crearMeme("menem.png")
 	}
 }

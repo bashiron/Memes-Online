@@ -8,49 +8,111 @@ class Provider {
 	
 	File memes
 	
+	/**
+	 * Contructor que se ubica en la carpeta de memes default.
+	 */
 	new() {
 		this.memes = new File("C:\\Users\\user\\Downloads\\Luchi\\Memes")
 	}
 	
-//	/**
-//	 * Prop: busca un meme segun <code>nombre</code> y devuelve el path en caso de que exista el meme.
-//	 * @param	nombre	nombre del archivo con extension (ejemplo: popuko.png)
-//	 */
-//	 def giveMeme(String nombre) {
-//		//Busca en carpetas y subcarpetas el meme solicitado y lo guarda en "meme".
-//	 	val meme = 
-//	 	meme.
-//	 }
+	/**
+	 * Contructor que define el path recibido como carpeta principal.
+	 */
+	new(String path) {
+		val ubicacion = new File(path)
+		if (ubicacion.isFile) {throw new NotFolderException} else {
+			this.memes = ubicacion
+		}
+	}
 	
 //	------------- RETORNO -------------
 
 	/**
-	 * Prop: busca un meme segun <code>nombre</code> y devuelve el path en caso de que exista el meme.<p>
-	 * Nota: solo busca en la carpeta padre. Retorna null si no lo encuentra.
-	 * @param	nombre	nombre del archivo con extension (ejemplo: popuko.png)
+	 * Prop: busca un meme recursivamente segun <code>nombre</code> en la carpeta principal y devuelve el path en caso
+	 * de que exista el meme.
+	 * @param	nombre	nombre del archivo con extension (ejemplo: popuko.png).
 	 */
-	def getMeme(String nombre) {
-		memes.listFiles.findFirst[it.file && it.name==nombre].path
+	def dameMeme(String nombre) {
+		return giveMeme(memes,nombre);
 	}
 
 	/**
-	 * Prop: devuelve todos los archivos.
+	 * Prop: busca un meme recursivamente segun <code>nombre</code> en la carpeta indicada y devuelve el path en caso
+	 * de que exista el meme.
+	 * @param	carpeta	la carpeta donde buscar el meme.
+	 * @param	nombre	nombre del archivo con extension (ejemplo: popuko.png).
+	 */
+	 def String giveMeme(File carpeta, String nombre) {
+		var ret = "<NO HAY MEME>"
+	 	val meme = getMeme(carpeta,nombre)
+	 	if (meme !== null) {
+		 	ret = meme
+	 	} else {
+	 		for (File folder : carpetas(carpeta)) {
+	 			ret = giveMeme(folder, nombre)
+	 		}
+	 	}
+	 	ret
+	 }
+
+	/**
+	 * Prop: busca un meme segun <code>nombre</code> en la carpeta indicada y devuelve el path en caso de que exista el meme.<p>
+	 * Nota: retorna null si no lo encuentra.
+	 * @param	carpeta	la carpeta donde buscar el meme.
+	 * @param	nombre	nombre del archivo con extension (ejemplo: popuko.png).
+	 */
+	def private getMeme(File carpeta, String nombre) {
+		try {
+			carpeta.listFiles.findFirst[it.file && it.name==nombre].path
+		} catch (NullPointerException exception) {	//En caso de que no tenga subcarpetas.
+			return null
+		}
+	}
+
+	/**
+	 * Prop: devuelve todos los archivos dentro de la carpeta principal.
 	 */
 	def archivos() {
-		memes.listFiles.filter[it.file].toList
+		archivos(memes)
 	}
 	
 	/**
-	 * Prop: devuelve todas las carpetas.
+	 * Prop: devuelve todos los archivos dentro de la carpeta indicada.
+	 * @param	archivo	archivo donde buscar archivos
+	 */
+	def archivos(File archivo) {
+		if (archivo.isFile) {
+			throw new NotFolderException
+		} else {
+			archivo.listFiles.filter[it.file].toList
+		}
+	}
+	
+	/**
+	 * Prop: devuelve todas las carpetas dentro de la carpeta principal.
 	 */
 	def carpetas() {
-		memes.listFiles.filter[it.directory].toList
+		carpetas(memes)
+	}
+	
+	/**
+	 * Prop: devuelve todas las carpetas dentro de la carpeta indicada.
+	 * @param	archivo	archivo donde buscar carpetas.
+	 */
+	def carpetas(File archivo) {
+		if (archivo.isFile) {
+			throw new NotFolderException
+		} else {
+			archivo.listFiles.filter[it.directory].toList
+		}
 	}
 
 //	------------- CREACION -------------
 	
 	/**
-	 * Prop: crea una subcarpeta con el nombre indicado. Tambien crea las carpetas padre del path si no existen.
+	 * Prop: crea una subcarpeta en la carpeta principal con el nombre indicado. Tambien crea las carpetas padre
+	 * del path si no existen.
+	 * @param	nombre	puede ser un nombre simple o un path estilo (..\\carpetaAbuelo\\carpetaPadre\\carpeta).
 	 */
 	def crearSubcarpeta(String nombre) {
 		val sub = new File(memes.path + "\\" + nombre)
@@ -58,12 +120,19 @@ class Provider {
 	}
 	
 	/**
-	 * Prop: crea un archivo con el nombre recibido.
+	 * Prop: crea un meme con el nombre recibido en la carpeta principal.
 	 */
-	def crearArchivo(String nombre) {
+	def crearMeme(String nombre) {
 		val nuevo = new File(memes,nombre)
 		nuevo.createNewFile
 	}
+	
+//	/**
+//	 * Prop: crea un meme con el nombre recibido en la ubicacion indicada en <code>path</code>.
+//	 */
+//	def crearMemeEn(String path, String nombre) {
+//		
+//	}
 	
 //	------------- OTROS -------------
 
@@ -73,6 +142,14 @@ class Provider {
 	def hayCarpeta(String nombre) {
 		val carpetas = this.carpetas
 		carpetas.exists[it.name==nombre]
+	}
+	
+	/**
+	 * Prop: indica si hay un meme con el nombre indicado.
+	 */
+	def hayMeme(String nombre) {
+		val memes = this.archivos
+		memes.exists[it.name==nombre]
 	}
 	
 	
