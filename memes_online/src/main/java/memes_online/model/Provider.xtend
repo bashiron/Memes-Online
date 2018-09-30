@@ -18,6 +18,8 @@ class Provider {
 	
 	/**
 	 * Contructor que define el path recibido como carpeta principal.
+	 * Nota: el path recibido debe ser una carpeta existente, en caso de que sea un archivo tira {@link NotFolderException}.<p>
+	 * Si la carpeta no existe el funcionamiento del Provider es indefinido.
 	 */
 	new(String path) {
 		val ubicacion = new File(path)
@@ -40,7 +42,8 @@ class Provider {
 
 	/**
 	 * Prop: busca un meme recursivamente segun <code>nombre</code> en la carpeta indicada y devuelve el path en caso
-	 * de que exista el meme.
+	 * de que exista el meme.<p>
+	 * Nota: devuelve "{@literal <}NO HAY MEME{@literal >}" si no lo encuentra.
 	 * @param	carpeta	la carpeta donde buscar el meme.
 	 * @param	nombre	nombre del archivo con extension (ejemplo: popuko.png).
 	 */
@@ -62,7 +65,7 @@ class Provider {
 	/**
 	 * Prop: interpreta la lista de resultados recibidos por la busqueda recursiva y devuelve el resultado final.
 	 */
-	def String recolectarResultados(List<String> resultados) {
+	def private String recolectarResultados(List<String> resultados) {
 		val filtrado = resultados.filter[it != "<NO HAY MEME>"].toList	//Quita los indicadores de que no se encontro el meme.
 		if (!filtrado.empty) {
 			return filtrado.get(0)
