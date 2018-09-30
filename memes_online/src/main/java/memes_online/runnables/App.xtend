@@ -8,6 +8,6 @@ class App {
 		val provider = new Provider
 //		provider.crearMeme("memin.jpg")
 //		provider.limpiarDirectorio
-		System.out.println(provider.existeMeme("memin.jpg"))
+//		System.out.println(provider.existeMeme("memin.jpg"))
 	}
 }

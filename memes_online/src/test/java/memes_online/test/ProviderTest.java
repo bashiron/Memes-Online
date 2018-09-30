@@ -51,14 +51,15 @@ public class ProviderTest {
 	
 	@Test
 	public void testBuscarMemeRecursivo() {
-		provider.crearSubcarpeta("prueba\\prueba-cool");
-//		provider.crearMeme("memazo.jpg");
-		assertTrue(provider.dameMeme(meme2) != "<NO HAY MEME>");
+		provider.crearMemeEn("\\primero\\segundo\\final", meme2);
+		assertTrue(provider.existeMeme(meme2));
 	}
 	
 	@Test
 	public void testCrearMemeEnNuevaCarpeta() {
 		assertFalse(provider.existeCarpeta(carpeta1));
+		provider.crearMemeEn("\\padre\\" + carpeta1, meme1);
+		assertTrue(provider.existeCarpeta(carpeta1));
 	}
 	
 }

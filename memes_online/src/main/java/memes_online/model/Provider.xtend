@@ -156,14 +156,13 @@ class Provider {
 	/**
 	 * Prop: crea un meme con el nombre recibido en la ubicacion indicada en <code>path</code>. Si la ubicacion no existe crea
 	 * las carpetas necesarias.
+	 * @param	path	es relativo a la carpeta principal, o sea que puede ser del estilo(\\subPrincipal\\carpetaNueva).
+	 * @param	nombre	nombre del archivo a crear con extension (ejemplo: popuko.png).
 	 */
 	def crearMemeEn(String path, String nombre) {
 		crearSubcarpeta(path)
-		//TODO
-		val parent_path = 		//Aca se deberia usar expresiones regulares y conseguir el path padre del pasado por parametro.
-		val padre =  File(parent_path)
-		val nuevo = new File(padre,nombre)
-		
+		val nuevo = new File(memes.path + "\\" + path,nombre)
+		nuevo.createNewFile
 	}
 	
 //	------------- EXISTENCIA -------------
