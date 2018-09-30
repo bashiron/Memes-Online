@@ -2,6 +2,8 @@ package memes_online.model
 
 import java.io.File
 import org.eclipse.xtend.lib.annotations.Accessors
+import java.util.ArrayList
+import java.util.List
 
 @Accessors
 class Provider {
@@ -29,7 +31,8 @@ class Provider {
 
 	/**
 	 * Prop: busca un meme recursivamente segun <code>nombre</code> en la carpeta principal y devuelve el path en caso
-	 * de que exista el meme.
+	 * de que exista el meme.<p>
+	 * Nota: devuelve "{@literal <}NO HAY MEME{@literal >}" si no lo encuentra.
 	 * @param	nombre	nombre del archivo con extension (ejemplo: popuko.png).
 	 */
 	def dameMeme(String nombre) {
@@ -48,12 +51,26 @@ class Provider {
 	 	if (meme !== null) {
 		 	ret = meme
 	 	} else {
+	 		val resultados = newArrayList
 	 		for (File folder : carpetas(carpeta)) {
-	 			ret = giveMeme(folder, nombre)
+	 			resultados.add(giveMeme(folder, nombre))
 	 		}
+	 		ret = recolectarResultados(resultados)
 	 	}
 	 	ret
 	 }
+	
+	/**
+	 * Prop: interpreta la lista de resultados recibidos por la busqueda recursiva y devuelve el resultado final.
+	 */
+	def String recolectarResultados(List<String> resultados) {
+		val filtrado = resultados.filter[it != "<NO HAY MEME>"].toList	//Quita los indicadores de que no se encontro el meme.
+		if (!filtrado.empty) {
+			return filtrado.get(0)
+		} else {
+			return "<NO HAY MEME>"
+		}
+	}
 
 	/**
 	 * Prop: busca un meme segun <code>nombre</code> en la carpeta indicada y devuelve el path en caso de que exista el meme.<p>
@@ -127,21 +144,57 @@ class Provider {
 		nuevo.createNewFile
 	}
 	
-//	/**
-//	 * Prop: crea un meme con el nombre recibido en la ubicacion indicada en <code>path</code>.
-//	 */
-//	def crearMemeEn(String path, String nombre) {
-//		
-//	}
+	/**
+	 * Prop: crea un meme con el nombre recibido en la ubicacion indicada en <code>path</code>. Si la ubicacion no existe crea
+	 * las carpetas necesarias.
+	 */
+	def crearMemeEn(String path, String nombre) {
+		crearSubcarpeta(path)
+		//TODO
+	}
 	
-//	------------- OTROS -------------
+//	------------- EXISTENCIA -------------
 
 	/**
-	 * Prop: indica si hay una carpeta con el nombre indicado.
+	 * Prop: indica si hay una carpeta con el nombre indicado en el primer nivel del directorio principal.
 	 */
 	def hayCarpeta(String nombre) {
-		val carpetas = this.carpetas
+		hayCarpeta(memes,nombre)
+	}
+	
+	/**
+	 * Prop: indica si hay una carpeta con el nombre indicado en el primer nivel de la carpeta indicada.
+	 * @param	carpeta	la carpeta donde buscar.
+	 * @param	nombre	la carpeta que se desea encontrar.
+	 */
+	def hayCarpeta(File carpeta, String nombre) {
+		val carpetas = this.carpetas(carpeta)
 		carpetas.exists[it.name==nombre]
+	}
+	
+	/**
+	 * Prop: busca una carpeta recursivamente en el directorio principal y subcarpetas.
+	 */
+	def existeCarpeta(String objetivo) {
+		lookUpFolder(memes,objetivo)
+	}
+	
+	/**
+	 * Prop: busca una carpeta recursivamente en la carpeta indicada y subcarpetas.
+	 */
+	def private boolean lookUpFolder(File carpeta, String objetivo) {
+		hayCarpeta(carpeta,objetivo) || lookUpSubFolders(carpeta,objetivo)
+	}
+	
+	/**
+	 * Prop: busca una carpeta recursivamente en las subcarpetas de la carpeta indicada.
+	 */
+	def private boolean lookUpSubFolders(File carpeta, String objetivo) {
+		var cadena = false
+		for (File sub_folder : carpetas(carpeta)) {
+			cadena = cadena || lookUpFolder(sub_folder,objetivo)
+		}
+		return cadena
 	}
 	
 	/**
@@ -152,6 +205,14 @@ class Provider {
 		memes.exists[it.name==nombre]
 	}
 	
+	/**
+	 * Prop: indica si existe un meme del nombre indicado buscando recursivamente en el directorio principal y subcarpetas.
+	 */
+	def existeMeme(String nombre) {
+		dameMeme(nombre) != "<NO HAY MEME>"
+	}
+	
+//	------------- OTROS -------------
 	
 	/**
 	 * Prop: sustituye la carpeta padre por la carpeta ubicada en el path recibido.

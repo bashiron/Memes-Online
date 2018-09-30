@@ -12,11 +12,13 @@ public class ProviderTest {
 	
 	String		meme1;
 	String		meme2;
+	String		carpeta1;
 	
 	@Before
 	public void setUp() {
 		meme1 = "memazo.jpg";
 		meme2 = "menem.png";
+		carpeta1 = "prueba";
 		provider = new Provider();
 	}
 	
@@ -32,8 +34,13 @@ public class ProviderTest {
 
 	@Test
 	public void testCreacionSubCarpeta() {
-		provider.crearSubcarpeta("prueba");
-		assertTrue(provider.hayCarpeta("prueba"));
+		provider.crearSubcarpeta(carpeta1);
+		assertTrue(provider.hayCarpeta(carpeta1));
+	}
+	
+	@Test
+	public void testTearDown() {
+		assertFalse(provider.hayCarpeta(carpeta1));		//Teniendo en cuenta el test de arriba
 	}
 	
 	@Test
@@ -47,6 +54,11 @@ public class ProviderTest {
 		provider.crearSubcarpeta("prueba\\prueba-cool");
 //		provider.crearMeme("memazo.jpg");
 		assertTrue(provider.dameMeme(meme2) != "<NO HAY MEME>");
+	}
+	
+	@Test
+	public void testCrearMemeEnNuevaCarpeta() {
+		assertFalse(provider.existeCarpeta(carpeta1));
 	}
 	
 }
