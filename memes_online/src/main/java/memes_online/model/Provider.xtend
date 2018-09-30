@@ -3,28 +3,38 @@ package memes_online.model
 import java.io.File
 import java.util.List
 import org.eclipse.xtend.lib.annotations.Accessors
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 
 @Accessors
 class Provider {
 	
-	File memes
+	File	memes
+	File	papelera
 	
 	/**
 	 * Contructor que se ubica en la carpeta de memes default.
 	 */
 	new() {
 		this.memes = new File("C:\\Users\\user\\Downloads\\Luchi\\Memes")
+		this.papelera = new File("C:\\Users\\user\\Desktop\\Papelera-java")
 	}
 	
 	/**
-	 * Contructor que define el path recibido como carpeta principal.
-	 * Nota: el path recibido debe ser una carpeta existente, en caso de que sea un archivo tira {@link NotFolderException}.<p>
-	 * Si la carpeta no existe el funcionamiento del Provider es indefinido.
+	 * Contructor que define los paths recibidos como carpeta principal y carpeta papelera.
+	 * Nota: los paths recibidos deben ser carpetas existentes, en caso de que alguno sea un archivo
+	 * tira {@link NotFolderException}.<p>
+	 * Si alguna carpeta no existe el funcionamiento del Provider es indefinido.
+	 * @param	path_main	el path del directorio a ser usado como principal.
+	 * @param	path_papelera	el path del directorio a ser usado como papelera.
 	 */
-	new(String path) {
-		val ubicacion = new File(path)
-		if (ubicacion.isFile) {throw new NotFolderException} else {
+	new(String path_main, String path_papelera) {
+		val ubicacion = new File(path_main)
+		val papelera = new File(path_papelera)
+		if (ubicacion.isFile || papelera.isFile) {throw new NotFolderException} else {
 			this.memes = ubicacion
+			this.papelera = papelera
 		}
 	}
 	
@@ -261,11 +271,57 @@ class Provider {
 	 */
 	def private void cleanUp(File carpeta) {
 		for (File sub_file : carpeta.listFiles) {
-			sub_file.delete							//Se borran las vacias y los memes
+			sub_file.eliminar						//Se borran las vacias y los memes
 		}
 		if (!carpetas(carpeta).empty) {
 			for (File sub_file : carpeta.listFiles) {
 				cleanUp(sub_file)					//Recursion sobre las carpetas restantes
+			}
+		}
+		carpeta.eliminar
+	}
+	
+	/**
+	 * Prop: mueve archivos a la papelera de reciclaje en vez de eliminarlos permanentemente.
+	 */
+	def void eliminar(File archivo) {
+		mover(archivo,papelera.path)
+	}
+	
+	/**
+	 * Prop: cambia de directorio el archivo recibido hacia el path indicado.
+	 * @param	archivo	el archivo a mover.
+	 * @param	destino	el path del destino.
+	 */
+	def mover(File archivo, String destino) {
+		Files.move(Paths.get(archivo.path), Paths.get(destino+"\\"+archivo.name), StandardCopyOption.REPLACE_EXISTING)
+	}
+	
+	/**
+	 * CUIDADO - Una vez borrados los elementos de la papelera ya no se pueden recuperar.<p>
+	 * Prop: limpia de carpetas y memes la papelera, haciendo recursion sobre sus carpetas.
+	 */
+	def limpiarPapelera() {
+		for (File sub_file : papelera.listFiles) {
+			sub_file.delete								//Se borran las vacias y los memes
+		}
+		if (!carpetas(papelera).empty) {
+			for (File sub_file : papelera.listFiles) {
+				cleanSubPapelera(sub_file)				//Recursion sobre las carpetas restantes
+			}
+		}
+	}
+	
+	/**
+	 * Prop: limpia de carpetas y memes la carpeta indicada, el borrado es permanente.
+	 */
+	def private void cleanSubPapelera(File carpeta) {
+		for (File sub_file : carpeta.listFiles) {
+			sub_file.delete							//Se borran las vacias y los memes
+		}
+		if (!carpetas(carpeta).empty) {
+			for (File sub_file : carpeta.listFiles) {
+				cleanSubPapelera(sub_file)				//Recursion sobre las carpetas restantes
 			}
 		}
 		carpeta.delete

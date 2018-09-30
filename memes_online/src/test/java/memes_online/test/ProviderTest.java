@@ -7,18 +7,23 @@ import org.junit.*;
 import memes_online.model.NotFolderException;
 import memes_online.model.Provider;
 
+/*
+ * Los tests pasan solo si la carpeta usada como papelera esta vacia.
+ */
 public class ProviderTest {
 	
 	Provider	provider;
 	
 	String		original_path;
+	String		original_papelera;
 	String		meme1;
 	String		meme2;
 	String		carpeta1;
 	
 	@Before
 	public void setUp() {
-		original_path = "C:\\Users\\user\\Downloads\\Luchi\\Memes\\";
+		original_path = "C:\\Users\\user\\Downloads\\Luchi\\Memes";
+		original_papelera = "C:\\Users\\user\\Desktop\\Papelera-java";
 		meme1 = "memazo.jpg";
 		meme2 = "menem.png";
 		carpeta1 = "prueba";
@@ -34,7 +39,7 @@ public class ProviderTest {
 	@Test(expected = NotFolderException.class)
 	public void testConstructorEnArchivoTiraExcepcion() {
 		provider.crearMeme(meme2);
-		Provider explosivo = new Provider(original_path + meme2);
+		Provider explosivo = new Provider(original_path + "\\" + meme2,original_papelera);
 	}
 
 	@Test
@@ -77,7 +82,7 @@ public class ProviderTest {
 	public void testCambiarCarpetaPadre() {
 		provider.crearSubcarpeta("bla\\" + carpeta1);
 		assertFalse(provider.hayCarpeta(carpeta1));
-		provider.cambiarCarpetaPadre(original_path + "bla");
+		provider.cambiarCarpetaPadre(original_path + "\\" + "bla");
 		assertTrue(provider.hayCarpeta(carpeta1));
 	}
 	
