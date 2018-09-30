@@ -1,9 +1,8 @@
 package memes_online.model
 
 import java.io.File
-import org.eclipse.xtend.lib.annotations.Accessors
-import java.util.ArrayList
 import java.util.List
+import org.eclipse.xtend.lib.annotations.Accessors
 
 @Accessors
 class Provider {
@@ -85,6 +84,16 @@ class Provider {
 			return null
 		}
 	}
+	
+	/**
+	 * Prop: busca una carpeta recursivamente segun <code>nombre</code> en la carpeta principal y devuelve el path en caso
+	 * de que exista la carpeta.<p>
+	 * Nota: devuelve "{@literal <}NO HAY CARPETA{@literal >}" si no la encuentra.
+	 * @param	nombre	nombre de la carpeta a buscar.
+	 */
+	def dameCarpeta(String nombre) {
+		//TODO
+	}
 
 	/**
 	 * Prop: devuelve todos los archivos dentro de la carpeta principal.
@@ -151,6 +160,10 @@ class Provider {
 	def crearMemeEn(String path, String nombre) {
 		crearSubcarpeta(path)
 		//TODO
+		val parent_path = 		//Aca se deberia usar expresiones regulares y conseguir el path padre del pasado por parametro.
+		val padre =  File(parent_path)
+		val nuevo = new File(padre,nombre)
+		
 	}
 	
 //	------------- EXISTENCIA -------------
@@ -198,10 +211,17 @@ class Provider {
 	}
 	
 	/**
-	 * Prop: indica si hay un meme con el nombre indicado.
+	 * Prop: indica si hay un meme con el nombre indicado en el primer nivel del directorio principal.
 	 */
 	def hayMeme(String nombre) {
-		val memes = this.archivos
+		hayMeme(memes,nombre)
+	}
+	
+	/**
+	 * Prop: indica si hay un meme con el nombre indicado en el primer nivel de la carpeta indicada.
+	 */
+	def hayMeme(File carpeta, String nombre) {
+		val memes = this.archivos(carpeta)
 		memes.exists[it.name==nombre]
 	}
 	
