@@ -6,6 +6,8 @@ class App {
 	
 	def static void main(String[] args) {
 		val provider = new Provider
-		provider.crearMeme("menem.png")
+//		provider.crearMeme("memin.jpg")
+//		provider.limpiarDirectorio
+//		System.out.println(provider.dameMeme("inalcanzable.jpg"))
 	}
 }

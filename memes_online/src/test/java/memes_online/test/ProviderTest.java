@@ -2,8 +2,7 @@ package memes_online.test;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import memes_online.model.Provider;
 
@@ -19,6 +18,11 @@ public class ProviderTest {
 		meme1 = "memazo.jpg";
 		meme2 = "menem.png";
 		provider = new Provider();
+	}
+	
+	@After
+	public void tearDown() {
+		provider.limpiarDirectorio();
 	}
 	
 	@Test

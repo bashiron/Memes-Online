@@ -165,4 +165,27 @@ class Provider {
 		}
 	}
 	
+	/**
+	 * Prop: limpia de carpetas y memes el directorio principal.
+	 */
+	def void limpiarDirectorio() {
+		cleanUp(memes)
+		crearSubcarpeta("")		//Esto resucita el directorio principal.
+	}
+	
+	/**
+	 * Prop: limpia de carpetas y memes la carpeta indicada.
+	 */
+	def private void cleanUp(File carpeta) {
+		for (File sub_file : carpeta.listFiles) {
+			sub_file.delete							//Se borran las vacias y los memes
+		}
+		if (!carpetas(carpeta).empty) {
+			for (File sub_file : carpeta.listFiles) {
+				cleanUp(sub_file)					//Recursion sobre las carpetas restantes
+			}
+		}
+		carpeta.delete
+	}
+	
 }
