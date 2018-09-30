@@ -6,7 +6,8 @@ class App {
 	
 	def static void main(String[] args) {
 		val provider = new Provider()
-		provider.limpiarPapelera
+		provider.limpiarDirectorio
+//		provider.limpiarPapelera
 //		System.out.println(meme)
 	}
 }

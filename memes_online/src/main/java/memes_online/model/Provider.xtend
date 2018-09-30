@@ -7,6 +7,12 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
+/**
+ * Provee una interfaz para administracion basica sobre un directorio principal con el fin de generar memes y carpetas pero aun
+ * mas importante conseguir memes dentro del directorio principal y subdirectorios.<p>
+ * Trabaja sobre dos directorios en el sistema de archivos del SO: un directorio principal para almacenar memes y una papelera
+ * o "purgatorio" donde los memes y carpetas son movidos antes de una limpieza de papelera, si esta es invocada.
+ */
 @Accessors
 class Provider {
 	
@@ -250,20 +256,26 @@ class Provider {
 	 * Prop: limpia de carpetas y memes el directorio principal.
 	 */
 	def void limpiarDirectorio() {
-		cleanUp(memes)
-		crearSubcarpeta("")		//Esto resucita el directorio principal.
+		for (File sub_file : memes.listFiles) {
+			sub_file.eliminar						//Se borran las vacias y los memes
+		}
+		if (!carpetas(memes).empty) {
+			for (File sub_file : memes.listFiles) {
+				subCleanUp(sub_file)					//Recursion sobre las carpetas restantes
+			}
+		}
 	}
 	
 	/**
 	 * Prop: limpia de carpetas y memes la carpeta indicada.
 	 */
-	def private void cleanUp(File carpeta) {
+	def private void subCleanUp(File carpeta) {
 		for (File sub_file : carpeta.listFiles) {
 			sub_file.eliminar						//Se borran las vacias y los memes
 		}
 		if (!carpetas(carpeta).empty) {
 			for (File sub_file : carpeta.listFiles) {
-				cleanUp(sub_file)					//Recursion sobre las carpetas restantes
+				subCleanUp(sub_file)					//Recursion sobre las carpetas restantes
 			}
 		}
 		carpeta.eliminar
