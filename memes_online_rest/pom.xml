@@ -6,15 +6,30 @@
   <name>Memes Online REST</name>
   <description>API REST para solicitar memes de la computadora y operar sobre el sistema de archivos remotamente</description>
   <dependencies>
+  
   	<dependency>
   		<groupId>org.uqbar</groupId>
   		<artifactId>xtrest</artifactId>
   		<version>1.0.0</version>
   	</dependency>
+  	
   	<dependency>
   		<groupId>memes_online</groupId>
   		<artifactId>memes_online</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	
+  	<dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.2.11.v20150529</version>
+    </dependency>
+ 
+    <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>9.2.11.v20150529</version>
+    </dependency>
+    
   </dependencies>
 </project>
